@@ -1,0 +1,20 @@
+1. Qu'est-ce que Laravel Breeze et quelle différence avec Jetstream ?
+
+// Breeze : authentification simple (login, register, logout), rapide à installer, basé sur Blade.
+
+// Jetstream : authentification avancée (profil, 2FA, sessions), plus complet, basé sur Livewire ou Inertia.
+
+2. Comment ajouter une colonne personnalisée dans la table users ?
+
+ // Colonne personnalisée : création d’une migration, ajout de la colonne dans users, exécution avec php artisan migrate.
+
+ // php artisan make:migration add_column_to_nom de table_table --table=nom de table
+// php artisan migrate
+
+3. Comment protéger une route pour les utilisateurs connectés seulement ?
+
+ //Route protégée : utilisation du middleware auth pour bloquer l’accès aux utilisateurs non connectés.
+
+4. Quelle méthode PHP utilise-t-on pour vérifier le rôle d'un user ?
+ //Vérifier rôle : condition PHP qui vérifie auth()->user()->role pour autoriser ou refuser l’accès.
+
