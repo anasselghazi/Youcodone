@@ -11,5 +11,6 @@ class Restaurant extends Model
         'ville',
         'capacity',
         'cuisine',
+        'user_id',
     ];
 }

@@ -4,18 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Restaurant;
+use Illuminate\Support\Facades\Auth;
 class RestaurantController extends Controller
 {
      
 
     public function index()
     {
-        $restaurants = Restaurant::where('user_id', auth()->id())->get();
+         if (auth()->user()->role === 'restaurant') {
+         $restaurants = Restaurant::where('user_id', auth()->id())->get();
+    } else {
+         $restaurants = Restaurant::all();
+    }
         return view('restaurants.index', compact('restaurants'));
     }
 
     public function create()
     {
+         if (auth()->user()->role !== 'restaurateur') {
+        abort(403, "Accès refusé : Vous n'êtes pas un restaurateur.");
+    }
         return view('restaurants.create');
     }
 
@@ -23,7 +31,7 @@ class RestaurantController extends Controller
     public function store(Request $request)
     {
         $donneesValidees = $request->validate([
-            'nom'      => 'required|max:255',
+            'name'      => 'required|max:255',
             'ville'    => 'required|max:255',
             'capacity' => 'required|integer|min:1', 
             'cuisine'  => 'required|string',
@@ -56,7 +64,7 @@ class RestaurantController extends Controller
         }
 
         $donneesValidees = $request->validate([
-            'nom'      => 'required|max:255',
+            'name'      => 'required|max:255',
             'ville'    => 'required|max:255', 
             'capacity' => 'required|integer|min:1',
             'cuisine'  => 'required|string',
@@ -79,5 +87,26 @@ class RestaurantController extends Controller
         return redirect()->route('restaurants.index')
                          ->with('succes', 'Restaurant supprimé avec succès.');
     }
-} 
+ 
 
+     public function search(Request $request)
+{
+     $q = $request->query('q');
+
+    $restaurants = Restaurant::where('user_id', Auth::id())
+        ->when($q, function ($query, $q) {
+             return $query->where(function($subQuery) use ($q) {
+                $subQuery->where('ville', 'ilike', "%{$q}%")
+                         ->orWhere('cuisine', 'ilike', "%{$q}%");
+            });
+        })
+        ->paginate(10);
+
+    if ($request->ajax()) {
+         return view('restaurants._liste', compact('restaurants'))->render();
+    }
+
+    return view('restaurants.index', compact('restaurants'));
+}
+
+}
