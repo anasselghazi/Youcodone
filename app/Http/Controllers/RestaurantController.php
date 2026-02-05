@@ -92,6 +92,7 @@ class RestaurantController extends Controller
      public function search(Request $request)
 {
      $q = $request->query('q');
+     $parPage = $request->input('per_page', 10);
 
     $restaurants = Restaurant::where('user_id', Auth::id())
         ->when($q, function ($query, $q) {
@@ -100,7 +101,9 @@ class RestaurantController extends Controller
                          ->orWhere('cuisine', 'ilike', "%{$q}%");
             });
         })
-        ->paginate(10);
+
+        ->paginate($parPage)
+        ->withQueryString();
 
     if ($request->ajax()) {
          return view('restaurants._liste', compact('restaurants'))->render();

@@ -23,6 +23,11 @@
                 placeholder="Search by city or cuisine…"
                 class="w-full max-w-md border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
             >
+            <select id="per-page" class="rounded border-gray-300">
+             <option value="5">5</option>
+             <option value="10" selected>10</option>
+              <option value="25">25</option>
+              </select>
         </div>
 
         <div class="overflow-x-auto">
