@@ -18,3 +18,58 @@
 4. Quelle méthode PHP utilise-t-on pour vérifier le rôle d'un user ?
  //Vérifier rôle : condition PHP qui vérifie auth()->user()->role pour autoriser ou refuser l’accès.
 
+challenge 2
+
+1 php artisan make:migration create_nom-de-table_table
+
+2 
+$validated = $request->validate([
+    'nom' => 'required|string|max:255',
+    'ville' => 'required',
+]);
+
+3
+php artisan make:controller NOMController --r
+
+4
+La directive Blade @auth
+La directive @auth est un raccourci utilisé dans les fichiers Blade de Laravel pour vérifier si un utilisateur est connecté (authentifié).
+
+5 
+On utilise la méthode back() ou route() combinée avec withErrors() ou simplement un message flash via with().
+return redirect()->route('restaurants.index')->with('error', 'Accès refusé.');
+ 
+
+ challenge 3
+  1  La méthode when() permet d'ajouter une clause à ta requête uniquement si une condition est vraie. Cela évite les blocs if/else répétitifs.
+ $restaurants = Restaurant::query()
+    ->when($request->ville, function ($query, $ville) {
+        return $query->where('ville', $ville);
+    })
+    ->get();
+     2 
+     Il n'y a pas de méthode spécifique appelée like(). On utilise la méthode standard where() en passant trois arguments.
+
+      // Syntaxe : where('nom_colonne', 'operateur', 'valeur')
+->where('nom', 'like', "%{$search}%")
+
+3 Pour récupérer une valeur passée dans l'URL (ex: ?q=marrakech), on utilise l'objet Request.
+
+// Trois façons de faire :
+$q = $request->query('q');      // Spécifique au GET
+$q = $request->input('q');      // GET ou POST
+$q = $request->q;               // Propriété dynamique
+
+4 On utilise la méthode paginate() à la fin de la requête. Elle remplace get().
+
+$restaurants = Restaurant::paginate(10);
+
+Cette méthode fait deux choses automatiquement :
+
+Elle ajoute LIMIT et OFFSET à la requête SQL.
+
+Elle compte le nombre total de pages.
+
+5 Il suffit de passer une variable ou un chiffre en argument à la méthode paginate(). Pour que ce soit dynamique selon le choix de l'utilisateur :
+$nb = $request->input('per_page', 10); // 10 est la valeur par défaut
+$restaurants = Restaurant::paginate($nb);
