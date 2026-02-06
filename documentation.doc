@@ -73,3 +73,28 @@ Elle compte le nombre total de pages.
 5 Il suffit de passer une variable ou un chiffre en argument à la méthode paginate(). Pour que ce soit dynamique selon le choix de l'utilisateur :
 $nb = $request->input('per_page', 10); // 10 est la valeur par défaut
 $restaurants = Restaurant::paginate($nb);
+
+challenge 4
+1 php artisan make:migration create_category_product_table :// RESPECT ORDER ALPHA
+2 public function up(): void
+{
+    Schema::create('category_product', function (Blueprint $table) {
+        $table->id();
+        // Clé étrangère vers la table 'products'
+        $table->foreignId('product_id')->constrained()->onDelete('cascade');
+        // Clé étrangère vers la table 'categories'
+        $table->foreignId('category_id')->constrained()->onDelete('cascade');
+        $table->timestamps();
+    });
+}
+
+3 public function categories()
+{
+    return $this->belongsToMany(Category::class);
+}
+4  
+Méthode	Action
+attach($id)	Ajoute un enregistrement dans la table pivot (risque de doublons).
+detach($id)	Supprime l'enregistrement de la table pivot.
+sync([$ids])	La plus utilisée. Remplace toutes les liaisons par la liste fournie.
+toggle($id)	Ajoute si absent, supprime si présent.
