@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RestaurantController;
-
+use App\Http\Controllers\ClientController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -30,6 +30,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/restaurants/{restaurant}/edit', [RestaurantController::class, 'edit'])->name('restaurants.edit');
     Route::put('/restaurants/{restaurant}', [RestaurantController::class, 'update'])->name('restaurants.update');
     Route::delete('/restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('restaurants.destroy');
+
+    Route::get('/client', [ClientController::class, 'index'])->name('client.explore');
+ Route::post('/restaurant/{restaurantId}/favorite', [ClientController::class, 'toggleFavorite'])->name('favorite.toggle')->middleware('auth');
+
  });
 
 
